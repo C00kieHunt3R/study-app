@@ -24,7 +24,7 @@ public class StudentService {
     @Autowired
     GroupRepository groupRepository;
 
-    public Long create(long groupId, StudentPojo pojo) throws EntityBuildingException, EntityIdDoesNotExistException {
+    public StudentPojo create(long groupId, StudentPojo pojo) throws EntityBuildingException, EntityIdDoesNotExistException {
         Student student;
         try {
             student = StudentPojo.toEntity(pojo);
@@ -34,10 +34,10 @@ public class StudentService {
         Optional<Group> optionalGroup = groupRepository.findById(groupId);
         if (optionalGroup.isPresent()) {
             student.setGroup(optionalGroup.get());
-            return studentRepository.save(student).getId();
+            return StudentPojo.fromEntity(studentRepository.save(student));
         } else {
             throw new EntityIdDoesNotExistException(
-                    String.format("Не удалось создать новый объект \"Студент\". Группа с ID \"%s\" не существует", groupId)
+                    String.format("Не удалось создать новый объект Студент. Группа с ID \"%s\" не существует", groupId)
             );
         }
     }
@@ -68,7 +68,7 @@ public class StudentService {
 
     }
 
-    public long update(long id, StudentPojo pojo) throws EntityIdDoesNotExistException {
+    public StudentPojo update(long id, StudentPojo pojo) throws EntityIdDoesNotExistException {
         Optional<Student> optionalStudent = studentRepository.findById(id);
         if (optionalStudent.isPresent()) {
             Student student = optionalStudent.get();
@@ -77,16 +77,21 @@ public class StudentService {
             student.setNumber(pojo.getNumber());
             student.setBirthdate(pojo.getBirthdate());
             studentRepository.save(student);
-            return student.getId();
+            return StudentPojo.fromEntity(student);
         } else {
             throw new EntityIdDoesNotExistException(String.format("Студент с ID %s не существует", id));
         }
-
     }
 
     @Transactional
-    public Long delete(long id) {
-        return studentRepository.deleteAllById(id);
+    public Boolean delete(long id) throws EntityIdDoesNotExistException {
+        Optional<Student> optionalStudent = studentRepository.findById(id);
+        if (optionalStudent.isPresent()) {
+            studentRepository.deleteById(id);
+            return true;
+        } else {
+            throw new EntityIdDoesNotExistException(String.format("Студент с ID %s не существует", id));
+        }
     }
 
 }

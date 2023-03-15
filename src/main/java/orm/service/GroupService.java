@@ -32,20 +32,25 @@ public class GroupService {
         return result;
     }
 
-    public long create(GroupPojo pojo) {
+    public GroupPojo create(GroupPojo pojo) {
         if (pojo.getStudents() == null) {
             pojo.setStudents(new ArrayList<>());
         }
-        return groupRepository.save(GroupPojo.toEntity(pojo)).getId();
+        return GroupPojo.fromEntity(groupRepository.save(GroupPojo.toEntity(pojo)));
     }
 
     @Transactional
-    public Long delete(Long id) {
-        return groupRepository.deleteAllById(id);
+    public Boolean delete(Long id) {
+        Optional<Group> optionalGroup = groupRepository.findById(id);
+        if (optionalGroup.isPresent()) {
+            groupRepository.deleteById(id);
+            return true;
+        }
+        return false;
     }
 
 
-    public Long update(long id, GroupPojo pojo) throws EntityIdDoesNotExistException {
+    public GroupPojo update(long id, GroupPojo pojo) throws EntityIdDoesNotExistException {
         Optional<Group> optionalGroup = groupRepository.findById(id);
         if (optionalGroup.isPresent()) {
             Group group = optionalGroup.get();
@@ -56,7 +61,8 @@ public class GroupService {
 //                students.add(StudentPojo.toEntity(studentPojo));
 //            }
 //            group.setStudents(students);
-            return group.getId();
+            groupRepository.save(group);
+            return GroupPojo.fromEntity(group);
         } else {
             throw new EntityIdDoesNotExistException(String.format("Группа с ID %s не существует", id));
         }

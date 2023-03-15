@@ -31,17 +31,17 @@ public class GroupController {
     }
 
     @PostMapping("/create")
-    public Long create(@RequestBody GroupPojo pojo) {
+    public GroupPojo create(@RequestBody GroupPojo pojo) {
         return groupService.create(pojo);
     }
 
     @DeleteMapping("/delete/{id}")
-    public Long delete(@PathVariable Long id) {
+    public Boolean delete(@PathVariable Long id) {
         return groupService.delete(id);
     }
 
     @PutMapping("/update/{id}")
-    public Long update(@PathVariable Long id, @RequestBody GroupPojo pojo) throws EntityIdDoesNotExistException {
+    public GroupPojo update(@PathVariable Long id, @RequestBody GroupPojo pojo) throws EntityIdDoesNotExistException {
         return groupService.update(id, pojo);
     }
 

@@ -6,6 +6,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ProblemDetail;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import orm.dto.GroupPojo;
 import orm.dto.StudentPojo;
 import orm.exception.EntityBuildingException;
 import orm.exception.EntityIdDoesNotExistException;
@@ -41,22 +42,18 @@ public class StudentController {
     }
 
     @PostMapping("/create/{groupId}")
-    public String create(@PathVariable Long groupId, @RequestBody StudentPojo pojo) {
-        try {
-            return studentService.create(groupId, pojo).toString();
-        } catch (EntityBuildingException
-                 | EntityIdDoesNotExistException e) {
-            return e.getMessage();
-        }
+    public StudentPojo create(@PathVariable Long groupId, @RequestBody StudentPojo pojo) throws EntityBuildingException, EntityIdDoesNotExistException {
+        return studentService.create(groupId, pojo);
+
     }
 
     @PutMapping("/update/{id}")
-    public Long update(@PathVariable Long id, @RequestBody StudentPojo pojo) throws EntityIdDoesNotExistException {
+    public StudentPojo update(@PathVariable Long id, @RequestBody StudentPojo pojo) throws EntityIdDoesNotExistException {
         return studentService.update(id, pojo);
     }
 
     @DeleteMapping("/delete/{id}")
-    public Long delete(@PathVariable Long id) {
+    public Boolean delete(@PathVariable Long id) throws EntityIdDoesNotExistException {
         return studentService.delete(id);
     }
 
