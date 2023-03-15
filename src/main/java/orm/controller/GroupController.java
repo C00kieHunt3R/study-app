@@ -4,6 +4,7 @@ package orm.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import orm.dto.GroupPojo;
+import orm.exception.EntityIdDoesNotExistException;
 import orm.service.GroupService;
 import orm.service.StudentService;
 
@@ -19,15 +20,18 @@ public class GroupController {
     StudentService studentService;
 
 
-    @GetMapping
-    public List<GroupPojo> findAll(String name) {
-//        List<GroupPojo> pojos = groupService.findAll(name);
+    @GetMapping("/get-all")
+    public List<GroupPojo> findAll(@RequestBody String name) {
         return groupService.findAll(name);
+    }
 
+    @GetMapping("/get/{id}")
+    public GroupPojo findById(@PathVariable Long id) throws EntityIdDoesNotExistException {
+        return groupService.findById(id);
     }
 
     @PostMapping("/create")
-    public long create(@RequestBody GroupPojo pojo) {
+    public Long create(@RequestBody GroupPojo pojo) {
         return groupService.create(pojo);
     }
 
@@ -36,5 +40,9 @@ public class GroupController {
         return groupService.delete(id);
     }
 
+    @PutMapping("/update/{id}")
+    public Long update(@PathVariable Long id, @RequestBody GroupPojo pojo) throws EntityIdDoesNotExistException {
+        return groupService.update(id, pojo);
+    }
 
 }

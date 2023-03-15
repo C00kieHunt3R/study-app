@@ -7,6 +7,7 @@ import orm.dto.GroupPojo;
 import orm.dto.StudentPojo;
 import orm.entity.Group;
 import orm.entity.Student;
+import orm.exception.EntityIdDoesNotExistException;
 import orm.repository.GroupRepository;
 import orm.repository.StudentRepository;
 
@@ -44,19 +45,30 @@ public class GroupService {
     }
 
 
-    public long update(long id, GroupPojo pojo) {
+    public Long update(long id, GroupPojo pojo) throws EntityIdDoesNotExistException {
         Optional<Group> optionalGroup = groupRepository.findById(id);
         if (optionalGroup.isPresent()) {
             Group group = optionalGroup.get();
             group.setName(pojo.getName());
-            List<Student> students = new ArrayList<>();
-            for (StudentPojo studentPojo:
-                    pojo.getStudents()) {
-                students.add(StudentPojo.toEntity(studentPojo));
-            }
-            group.setStudents(students);
+//            List<Student> students = new ArrayList<>();
+//            for (StudentPojo studentPojo:
+//                    pojo.getStudents()) {
+//                students.add(StudentPojo.toEntity(studentPojo));
+//            }
+//            group.setStudents(students);
             return group.getId();
-        } else return 0;
+        } else {
+            throw new EntityIdDoesNotExistException(String.format("Группа с ID %s не существует", id));
+        }
+    }
+
+    public GroupPojo findById(Long id) throws EntityIdDoesNotExistException {
+        Optional<Group> optionalGroup = groupRepository.findById(id);
+        if (optionalGroup.isPresent()) {
+            return GroupPojo.fromEntity(optionalGroup.get());
+        } else {
+            throw new EntityIdDoesNotExistException(String.format("Группа с ID %s не существует", id));
+        }
     }
 
 

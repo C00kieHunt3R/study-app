@@ -12,6 +12,8 @@ import java.util.Optional;
 public interface StudentRepository extends JpaRepository<Student, Long> {
 
 
+    Long deleteAllById(Long id);
+
 //    @Query(value = "select * from public.students where name ilike '%' || :name || '%'", nativeQuery = true)
 //    List<Student> selectByName(String name);
 //
