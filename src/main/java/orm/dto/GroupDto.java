@@ -1,42 +1,40 @@
 package orm.dto;
 
-import lombok.Builder;
-import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
-import orm.entity.Group;
-import orm.entity.Student;
+import orm.model.Group;
+import orm.model.Student;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @Getter
 @Setter
-public class GroupPojo {
+public class GroupDto {
     private long id;
     private String name;
-    private List<StudentPojo> students;
+    private List<StudentDto> students;
 
-    public static Group toEntity(GroupPojo pojo) {
+    public static Group toEntity(GroupDto pojo) {
         Group group = new Group();
         group.setId(pojo.getId());
         group.setName(pojo.getName());
         List<Student> studentList = new ArrayList<>();
         group.setStudents(studentList);
-        for (StudentPojo studentPojo : pojo.getStudents()) {
-            studentList.add(StudentPojo.toEntity(studentPojo));
+        for (StudentDto studentDto : pojo.getStudents()) {
+            studentList.add(StudentDto.toEntity(studentDto));
         }
         return group;
     }
 
-    public static GroupPojo fromEntity(Group group) {
-        GroupPojo pojo = new GroupPojo();
+    public static GroupDto fromEntity(Group group) {
+        GroupDto pojo = new GroupDto();
         pojo.setId(group.getId());
         pojo.setName(group.getName());
-        List<StudentPojo> students = new ArrayList<>();
+        List<StudentDto> students = new ArrayList<>();
         pojo.setStudents(students);
         for (Student student : group.getStudents()) {
-            students.add(StudentPojo.fromEntity(student));
+            students.add(StudentDto.fromEntity(student));
         }
         return pojo;
     }

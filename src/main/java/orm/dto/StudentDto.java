@@ -2,21 +2,20 @@ package orm.dto;
 
 import lombok.Builder;
 import lombok.Data;
-import orm.entity.Group;
-import orm.entity.Student;
+import orm.model.Student;
 
 import java.util.Date;
 
 @Data
 @Builder
-public class StudentPojo {
+public class StudentDto {
     private long id;
     private String name;
     private Date birthdate;
     private int number;
 
-    public static StudentPojo fromEntity(Student student) {
-        return StudentPojo.builder()
+    public static StudentDto fromEntity(Student student) {
+        return StudentDto.builder()
                 .id(student.getId())
                 .name(student.getName())
                 .birthdate(student.getBirthdate())
@@ -24,7 +23,7 @@ public class StudentPojo {
                 .build();
     }
 
-    public static Student toEntity(StudentPojo pojo) {
+    public static Student toEntity(StudentDto pojo) {
         return Student.builder()
                 .id(pojo.getId())
                 .name(pojo.getName())

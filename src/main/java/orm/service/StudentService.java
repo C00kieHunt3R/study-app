@@ -3,10 +3,9 @@ package orm.service;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import orm.dto.GroupPojo;
-import orm.dto.StudentPojo;
-import orm.entity.Group;
-import orm.entity.Student;
+import orm.dto.StudentDto;
+import orm.model.Group;
+import orm.model.Student;
 import orm.exception.EntityBuildingException;
 import orm.exception.EntityIdDoesNotExistException;
 import orm.repository.GroupRepository;
@@ -24,17 +23,17 @@ public class StudentService {
     @Autowired
     GroupRepository groupRepository;
 
-    public StudentPojo create(long groupId, StudentPojo pojo) throws EntityBuildingException, EntityIdDoesNotExistException {
+    public StudentDto create(long groupId, StudentDto pojo) throws EntityBuildingException, EntityIdDoesNotExistException {
         Student student;
         try {
-            student = StudentPojo.toEntity(pojo);
+            student = StudentDto.toEntity(pojo);
         } catch (Exception e) {
             throw new EntityBuildingException("Не удалось создать сущность из полученного объекта!");
         }
         Optional<Group> optionalGroup = groupRepository.findById(groupId);
         if (optionalGroup.isPresent()) {
             student.setGroup(optionalGroup.get());
-            return StudentPojo.fromEntity(studentRepository.save(student));
+            return StudentDto.fromEntity(studentRepository.save(student));
         } else {
             throw new EntityIdDoesNotExistException(
                     String.format("Не удалось создать новый объект Студент. Группа с ID \"%s\" не существует", groupId)
@@ -42,14 +41,14 @@ public class StudentService {
         }
     }
 
-    public List<StudentPojo> findAllByGroup(long groupId) throws EntityIdDoesNotExistException {
+    public List<StudentDto> findAllByGroup(long groupId) throws EntityIdDoesNotExistException {
         Optional<Group> optionalGroup = groupRepository.findById(groupId);
         if (optionalGroup.isPresent()) {
             Group group = optionalGroup.get();
-            List<StudentPojo> students = new ArrayList<>();
+            List<StudentDto> students = new ArrayList<>();
             for (Student student:
                  group.getStudents()) {
-                students.add(StudentPojo.fromEntity(student));
+                students.add(StudentDto.fromEntity(student));
             }
             return students;
         } else {
@@ -57,18 +56,18 @@ public class StudentService {
         }
     }
 
-    public StudentPojo findById(long id) throws EntityIdDoesNotExistException {
+    public StudentDto findById(long id) throws EntityIdDoesNotExistException {
         Optional<Student> optionalStudent = studentRepository.findById(id);
         if (optionalStudent.isPresent()) {
             Student student = optionalStudent.get();
-            return StudentPojo.fromEntity(student);
+            return StudentDto.fromEntity(student);
         } else {
             throw new EntityIdDoesNotExistException(String.format("Студент с ID %s не существует", id));
         }
 
     }
 
-    public StudentPojo update(long id, StudentPojo pojo) throws EntityIdDoesNotExistException {
+    public StudentDto update(long id, StudentDto pojo) throws EntityIdDoesNotExistException {
         Optional<Student> optionalStudent = studentRepository.findById(id);
         if (optionalStudent.isPresent()) {
             Student student = optionalStudent.get();
@@ -77,7 +76,7 @@ public class StudentService {
             student.setNumber(pojo.getNumber());
             student.setBirthdate(pojo.getBirthdate());
             studentRepository.save(student);
-            return StudentPojo.fromEntity(student);
+            return StudentDto.fromEntity(student);
         } else {
             throw new EntityIdDoesNotExistException(String.format("Студент с ID %s не существует", id));
         }

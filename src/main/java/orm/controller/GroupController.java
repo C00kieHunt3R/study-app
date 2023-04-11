@@ -2,8 +2,9 @@ package orm.controller;
 
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
-import orm.dto.GroupPojo;
+import orm.dto.GroupDto;
 import orm.exception.EntityIdDoesNotExistException;
 import orm.service.GroupService;
 import orm.service.StudentService;
@@ -12,6 +13,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/groups")
+@CrossOrigin
 public class GroupController {
 
     @Autowired
@@ -21,17 +23,17 @@ public class GroupController {
 
 
     @GetMapping("/get-all")
-    public List<GroupPojo> findAll(@RequestBody String name) {
+    public List<GroupDto> findAll(@RequestBody String name) {
         return groupService.findAll(name);
     }
 
     @GetMapping("/get/{id}")
-    public GroupPojo findById(@PathVariable Long id) throws EntityIdDoesNotExistException {
+    public GroupDto findById(@PathVariable Long id) throws EntityIdDoesNotExistException {
         return groupService.findById(id);
     }
 
     @PostMapping("/create")
-    public GroupPojo create(@RequestBody GroupPojo pojo) {
+    public GroupDto create(@RequestBody GroupDto pojo) {
         return groupService.create(pojo);
     }
 
@@ -41,7 +43,7 @@ public class GroupController {
     }
 
     @PutMapping("/update/{id}")
-    public GroupPojo update(@PathVariable Long id, @RequestBody GroupPojo pojo) throws EntityIdDoesNotExistException {
+    public GroupDto update(@PathVariable Long id, @RequestBody GroupDto pojo) throws EntityIdDoesNotExistException {
         return groupService.update(id, pojo);
     }
 
