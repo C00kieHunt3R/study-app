@@ -38,19 +38,18 @@ public class StudentController {
         return studentService.findById(id);
     }
 
-    @PostMapping("/create/{groupId}")
-    public StudentDto create(@PathVariable Long groupId, @RequestBody StudentDto pojo) throws EntityBuildingException, EntityIdDoesNotExistException {
-        return studentService.create(groupId, pojo);
-
+    @PostMapping("/create")
+    public StudentDto create(@RequestParam(value = "groupId") Long groupId, @RequestBody StudentDto dto) throws EntityBuildingException, EntityIdDoesNotExistException {
+        return studentService.create(groupId, dto);
     }
 
-    @PutMapping("/update/{id}")
-    public StudentDto update(@PathVariable Long id, @RequestBody StudentDto pojo) throws EntityIdDoesNotExistException {
-        return studentService.update(id, pojo);
+    @PutMapping("/update")
+    public StudentDto update(@RequestParam(value = "id") Long id, @RequestBody StudentDto dto) throws EntityIdDoesNotExistException {
+        return studentService.update(id, dto);
     }
 
-    @DeleteMapping("/delete/{id}")
-    public Boolean delete(@PathVariable Long id) throws EntityIdDoesNotExistException {
+    @DeleteMapping("/delete")
+    public Boolean delete(@RequestParam(value = "id") Long id) throws EntityIdDoesNotExistException {
         return studentService.delete(id);
     }
 

@@ -22,9 +22,9 @@ public class GroupService {
     @Autowired
     private StudentRepository studentRepository;
 
-    public List<GroupDto> findAll(String name) {
+    public List<GroupDto> findAll() {
         List<GroupDto> result = new ArrayList<>();
-        for (Group group : name == null ? groupRepository.findAll() : groupRepository.findAllByNameContainingIgnoreCase(name)) {
+        for (Group group : groupRepository.findAll()) {
             result.add(GroupDto.fromEntity(group));
         }
         return result;
@@ -37,14 +37,18 @@ public class GroupService {
         return GroupDto.fromEntity(groupRepository.save(GroupDto.toEntity(pojo)));
     }
 
-    @Transactional
     public Boolean delete(Long id) {
-        Optional<Group> optionalGroup = groupRepository.findById(id);
-        if (optionalGroup.isPresent()) {
-            groupRepository.deleteById(id);
-            return true;
-        }
-        return false;
+        Group group = getEntity(id);
+        groupRepository.deleteById(group.getId());
+        return true;
+    }
+
+    private Group getEntity(Long id) {
+        return groupRepository.findById(id).orElseThrow(() -> {
+            throw new EntityIdDoesNotExistException(
+                    String.format("Сущность Группа с ID=%d не существует", id)
+            );
+        });
     }
 
 

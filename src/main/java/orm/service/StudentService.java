@@ -23,10 +23,10 @@ public class StudentService {
     @Autowired
     GroupRepository groupRepository;
 
-    public StudentDto create(long groupId, StudentDto pojo) throws EntityBuildingException, EntityIdDoesNotExistException {
+    public StudentDto create(long groupId, StudentDto dto) throws EntityBuildingException, EntityIdDoesNotExistException {
         Student student;
         try {
-            student = StudentDto.toEntity(pojo);
+            student = StudentDto.toEntity(dto);
         } catch (Exception e) {
             throw new EntityBuildingException("Не удалось создать сущность из полученного объекта!");
         }
@@ -82,15 +82,16 @@ public class StudentService {
         }
     }
 
-    @Transactional
     public Boolean delete(long id) throws EntityIdDoesNotExistException {
-        Optional<Student> optionalStudent = studentRepository.findById(id);
-        if (optionalStudent.isPresent()) {
-            studentRepository.deleteById(id);
-            return true;
-        } else {
-            throw new EntityIdDoesNotExistException(String.format("Студент с ID %s не существует", id));
-        }
+        Student student = getEntity(id);
+        studentRepository.deleteById(student.getId());
+        return true;
+    }
+
+    private Student getEntity(Long id) {
+        return studentRepository.findById(id).orElseThrow(() -> new EntityIdDoesNotExistException(
+                String.format("Сущность Студент с ID=%d не существует", id)
+        ));
     }
 
 }

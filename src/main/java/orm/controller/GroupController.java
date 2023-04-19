@@ -23,12 +23,12 @@ public class GroupController {
 
 
     @GetMapping("/get-all")
-    public List<GroupDto> findAll(@RequestBody String name) {
-        return groupService.findAll(name);
+    public List<GroupDto> findAll() {
+        return groupService.findAll();
     }
 
-    @GetMapping("/get/{id}")
-    public GroupDto findById(@PathVariable Long id) throws EntityIdDoesNotExistException {
+    @GetMapping("/get")
+    public GroupDto findById(@RequestParam(value = "id") Long id) throws EntityIdDoesNotExistException {
         return groupService.findById(id);
     }
 
@@ -37,13 +37,13 @@ public class GroupController {
         return groupService.create(pojo);
     }
 
-    @DeleteMapping("/delete/{id}")
-    public Boolean delete(@PathVariable Long id) {
+    @DeleteMapping("/delete")
+    public Boolean delete(@RequestParam(value = "id") Long id) {
         return groupService.delete(id);
     }
 
-    @PutMapping("/update/{id}")
-    public GroupDto update(@PathVariable Long id, @RequestBody GroupDto pojo) throws EntityIdDoesNotExistException {
+    @PutMapping("/update")
+    public GroupDto update(@RequestParam(value = "id") Long id, @RequestBody GroupDto pojo) throws EntityIdDoesNotExistException {
         return groupService.update(id, pojo);
     }
 

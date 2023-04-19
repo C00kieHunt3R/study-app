@@ -1,13 +1,17 @@
 package orm.dto;
 
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import orm.model.Student;
 
 import java.util.Date;
 
 @Data
 @Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class StudentDto {
     private long id;
     private String name;
@@ -31,4 +35,5 @@ public class StudentDto {
                 .number(pojo.getNumber())
                 .build();
     }
+
 }
